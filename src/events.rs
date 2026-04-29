@@ -15,11 +15,11 @@ type Result<T, E = Debug<diesel::result::Error>> = std::result::Result<T, E>;
 
 /// Creates an event
 #[post("/add", format = "json", data = "<arg_event>")]
-pub async fn add(arg_event: Json<Event>, user: Claims, tdb: EventDB) -> Result<Created<Json<Uuid>>> {
+pub async fn add(arg_event: Json<Event>, _user: Claims, tdb: EventDB) -> Result<Created<Json<Uuid>>> {
     let mut new_event: Event = arg_event.into_inner();
     new_event.id = Uuid::new_v4();
     let ret_id = new_event.id.clone();
-    let event_id = tdb
+    let _event_id = tdb
         .run(move |conn| {
             diesel::insert_into(crate::schema::events::dsl::events)
                 .values(&new_event)
@@ -86,7 +86,7 @@ pub async fn get_html(eventid: Uuid, tdb: EventDB) -> Result<Json<Vec<Event>>, N
 #[delete("/<eventid>")]
 pub async fn delete(
     eventid: Uuid,
-    user: Claims,
+    _user: Claims,
     tdb: EventDB,
 ) -> Result<Json<String>, NotFound<String>> {
     let results = tdb
