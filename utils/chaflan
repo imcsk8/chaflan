@@ -107,6 +107,27 @@ function delete_event {
     echo
 }
 
+# Modify event
+function modify_event {
+    UUID=$1
+    echo "Modifying event: ${UUID}"
+    curl -s -X PUT -H "Authorization: Bearer ${TOKEN}" \
+        -H 'Content-type: application/json' \
+        -d @${DATA_DIR}/${JSON_EVENT_FILE} ${HOST}/events/${UUID}
+    echo
+}
+
+# Upload event image
+function upload-image_event {
+    UUID=$1
+    FILE=$2
+    echo "Uploading image for event: ${UUID} from ${FILE}"
+    curl -s -X POST -H "Authorization: Bearer ${TOKEN}" \
+        --data-binary "@${FILE}" ${HOST}/events/${UUID}/image
+    echo
+}
+
+
 ################################################################################
 #                                                                              #
 #                                                                              #

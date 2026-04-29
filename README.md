@@ -66,6 +66,8 @@ A bash-based CLI utility is provided for interacting with the API.
   - `list`: List all events.
   - `get <uuid>`: Get details of a specific event.
   - `add`: Add a test event (requires `api_data/new_event.json`).
+  - `modify <uuid>`: Modify an event.
+  - `upload-image <uuid> <path>`: Upload an image.
   - `delete <uuid>`: Delete an event.
 - **tokens**: Manage authentication tokens.
   - `show`: Display the current JWT token.
@@ -87,6 +89,7 @@ A bash-based CLI utility is provided for interacting with the API.
 | `contactname` | `VARCHAR(255)` | Contact person |
 | `starts_at` | `TIMESTAMP` | Start time (Default: NOW) |
 | `ends_at` | `TIMESTAMP` | End time (Default: NOW) |
+| `url` | `TEXT` | Related URL (Not Null, Default: '') |
 
 ### `users` Table
 
