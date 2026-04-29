@@ -9,7 +9,7 @@ use rocket::serde::{ Deserialize, Serialize };
 use chrono::NaiveDateTime;
 use uuid::Uuid;
 use diesel::prelude::*;
-#[derive(Clone, Debug, Identifiable, Queryable, QueryableByName, Insertable, AsChangeset, Serialize, Deserialize)]
+#[derive(Clone, Debug, Identifiable, Queryable, QueryableByName, Insertable, Serialize, AsChangeset, Deserialize)]
 #[diesel(table_name = events)]
 pub struct Event {
     pub id: Uuid,
@@ -24,7 +24,7 @@ pub struct Event {
     pub url: String,
 }
 
-#[derive(Clone, Debug, Identifiable, Queryable, QueryableByName, Insertable, Serialize, Deserialize)]
+#[derive(Clone, Debug, Identifiable, Queryable, QueryableByName, Insertable, Serialize, AsChangeset, Deserialize)]
 #[diesel(table_name = users)]
 pub struct User {
     pub id: Uuid,
