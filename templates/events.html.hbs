@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Events</title>
+    <title>My Events - Chaflan</title>
+    <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
-    <section id="hello">
-        <header style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="container">
+        <header class="event-header">
             <h1>Events</h1>
             {{#if is_logged_in}}
-                <button onclick="window.location.href='/events/add_page'" style="padding: 0.5rem 1rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">+ Add Event</button>
+                <button onclick="window.location.href='/events/add_page'" class="btn-success">+ Add Event</button>
             {{else}}
-                <a href="/login">Login</a>
+                <a href="/login" class="btn btn-primary">Login</a>
             {{/if}}
         </header>
         <p>Events:</p>
@@ -25,6 +26,6 @@
             {{/each}}
         </ul>
         <h3>Total: {{ len events }}</h3>
-    </section>
+    </div>
 </body>
 </html>
