@@ -19,7 +19,7 @@
         <p>Events:</p>
         <ul>
             {{#each events}}
-            <li><a href="/events/{{ this.id }}">{{ this.name }}</a>&nbsp;{{this.starts_at}} {{this.ends_at}}</li>
+            <li><a href="/events/{{ this.id }}?format=text/html">{{ this.name }}</a>&nbsp;{{this.starts_at}} {{this.ends_at}}</li>
             {{else}}
             <p> No events yet</p>
             {{/each}}
