@@ -67,14 +67,14 @@ pub async fn upload_image(
 ) -> std::result::Result<Json<String>, Debug<std::io::Error>> {
     let filename = format!("{}_{}", eventid, file.name().unwrap_or("image.png"));
     let path = std::path::Path::new(crate::STATIC_FILES_DIR).join("uploads").join(&filename);
-    
+
     std::fs::create_dir_all(path.parent().unwrap()).unwrap();
 
     file.copy_to(&path).await.map_err(Debug)?;
-    
+
     let db_path = format!("/public/uploads/{}", filename);
     let db_path_clone = db_path.clone();
-    
+
     tdb.run(move |conn| {
         diesel::update(crate::schema::events::dsl::events.filter(crate::schema::events::dsl::id.eq(eventid)))
             .set(crate::schema::events::dsl::image.eq(db_path_clone))
