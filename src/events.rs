@@ -160,3 +160,9 @@ pub async fn delete(
         Err(NotFound(format!("Could not find event: {}", eventid)))
     }
 }
+
+/// Serve the page to add a new event
+#[get("/add_page")]
+pub async fn add_page(_user: Claims) -> Template {
+    Template::render("add_event", context! {})
+}
