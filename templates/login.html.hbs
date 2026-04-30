@@ -23,32 +23,6 @@
         <div id="message"></div>
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const user = document.getElementById('user').value;
-            const password = document.getElementById('password').value;
-            const messageDiv = document.getElementById('message');
-
-            try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user, password })
-                });
-
-                if (response.ok) {
-                    messageDiv.style.color = 'green';
-                    messageDiv.textContent = 'Login successful! Redirecting...';
-                    setTimeout(() => window.location.href = '/events', 1000);
-                } else {
-                    const error = await response.text();
-                    messageDiv.textContent = 'Login failed: ' + error;
-                }
-            } catch (err) {
-                messageDiv.textContent = 'An error occurred. Please try again.';
-            }
-        });
-    </script>
+    <script src="/public/js/events.js"></script>
 </body>
 </html>

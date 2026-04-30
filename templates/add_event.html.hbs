@@ -59,48 +59,6 @@
         <div id="message"></div>
     </div>
 
-    <script>
-        document.getElementById('addEventForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const messageDiv = document.getElementById('message');
-            
-            // Format dates to ISO string that Diesel expects (YYYY-MM-DDTHH:MM:SS)
-            const formatDate = (val) => val ? val + ":00" : null;
-
-            const payload = {
-                id: "00000000-0000-0000-0000-000000000000", // Placeholder, server will generate a real UUID
-                name: document.getElementById('name').value,
-                venue: document.getElementById('venue').value,
-                address: document.getElementById('address').value || null,
-                url: document.getElementById('url').value,
-                starts_at: formatDate(document.getElementById('starts_at').value),
-                ends_at: formatDate(document.getElementById('ends_at').value),
-                contactname: document.getElementById('contactname').value || null,
-                comments: document.getElementById('comments').value || null,
-                image: null
-            };
-
-            try {
-                const response = await fetch('/events/add', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    messageDiv.style.color = 'green';
-                    messageDiv.textContent = 'Event created successfully! Redirecting...';
-                    setTimeout(() => window.location.href = '/events', 1500);
-                } else {
-                    const error = await response.text();
-                    messageDiv.style.color = 'red';
-                    messageDiv.textContent = 'Failed to create event: ' + error;
-                }
-            } catch (err) {
-                messageDiv.style.color = 'red';
-                messageDiv.textContent = 'An error occurred. Please try again.';
-            }
-        });
-    </script>
+    <script src="/public/js/events.js"></script>
 </body>
 </html>
