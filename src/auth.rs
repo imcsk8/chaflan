@@ -4,6 +4,8 @@ use rocket::http::Status;
 use rocket::post;
 use rocket::response::status::Custom;
 use rocket::serde::json::Json;
+use rocket::get;
+use rocket_dyn_templates::{Template, context};
 use serde::{Deserialize, Serialize};
 
 /// Login request object
@@ -17,6 +19,12 @@ pub struct LoginRequest {
 #[derive(Serialize)]
 pub struct LoginResponse {
     token: String,
+}
+
+/// Serve the login page
+#[get("/login")]
+pub fn login_page() -> Template {
+    Template::render("login", context! {})
 }
 
 /// User authentication, Successful authentication returns a JWT

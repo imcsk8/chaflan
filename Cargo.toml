@@ -12,7 +12,7 @@ dotenvy = "~0.15.7"
 serde = "~1.0.228"
 uuid = { version = "~1.23.1", features = ["v4", "serde"] }
 chrono = { version = "~0.4.44", features = ["serde"] }
-jsonwebtoken = { version = "10.3.0", default-features = false }
+jsonwebtoken = { version = "10.3.0", default-features = false, features = ["rust_crypto"] }
 lazy_static = "1.5.0"
 
 [dependencies.rocket_dyn_templates]

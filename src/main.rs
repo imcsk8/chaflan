@@ -16,7 +16,7 @@ pub static STATIC_FILES_DIR: &str = "www/static";
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-		.mount("/", routes![auth::login])
+		.mount("/", routes![auth::login, auth::login_page])
         .mount(
             "/events",
             routes![events::add, events::delete, events::get_json,
