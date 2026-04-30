@@ -4,24 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ event.name }} - Chaflan</title>
-    <style>
-        body { font-family: sans-serif; background-color: #f0f2f5; padding: 2rem; display: flex; justify-content: center; }
-        .detail-container { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 800px; }
-        h1 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
-        .meta { color: #666; margin-bottom: 1.5rem; }
-        .meta-item { margin-bottom: 0.5rem; }
-        .meta-label { font-weight: bold; color: #444; }
-        .image-container { margin: 1.5rem 0; text-align: center; }
-        .event-image { max-width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .comments { background: #f9f9f9; padding: 1rem; border-radius: 4px; border-left: 4px solid #007bff; margin-top: 1.5rem; }
-        .nav-links { margin-top: 2rem; display: flex; gap: 1rem; }
-        .btn { text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.9rem; }
-        .btn-back { background: #6c757d; color: white; }
-        .btn-visit { background: #007bff; color: white; }
-    </style>
+    <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
-    <div class="detail-container">
+    <div class="container detail-container">
         <h1>{{ event.name }}</h1>
         
         <div class="meta">
@@ -50,9 +36,9 @@
         {{/if}}
 
         <div class="nav-links">
-            <a href="/events" class="btn btn-back">← Back to List</a>
+            <a href="/events" class="btn btn-secondary">← Back to List</a>
             {{#if event.url}}
-            <a href="{{ event.url }}" target="_blank" class="btn btn-visit">Visit Event Website</a>
+            <a href="{{ event.url }}" target="_blank" class="btn btn-primary">Visit Event Website</a>
             {{/if}}
         </div>
     </div>
