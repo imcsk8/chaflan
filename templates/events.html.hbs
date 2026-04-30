@@ -8,11 +8,18 @@
 </head>
 <body>
     <section id="hello">
-        <h1>Events</h1>
-        Events:
+        <header style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Events</h1>
+            {{#if is_logged_in}}
+                <button onclick="window.location.href='/events/add_page'" style="padding: 0.5rem 1rem; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">+ Add Event</button>
+            {{else}}
+                <a href="/login">Login</a>
+            {{/if}}
+        </header>
+        <p>Events:</p>
         <ul>
             {{#each events}}
-            <li><a href="/events/{{ this.id }}">{{ this.name }}</a>&nbsp;{{this.starts_at}} {{this.ends_at}}</li>
+            <li><a href="/events/{{ this.id }}?format=text/html">{{ this.name }}</a>&nbsp;{{this.starts_at}} {{this.ends_at}}</li>
             {{else}}
             <p> No events yet</p>
             {{/each}}
