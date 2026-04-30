@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DERIVE_FLAGS="Clone, Debug, Identifiable, Queryable, QueryableByName, Insertable, Serialize, Deserialize"
+DERIVE_FLAGS="Clone, Debug, Identifiable, Queryable, QueryableByName, Insertable, Serialize, AsChangeset, Deserialize"
 
 echo "Running diesel migrations"
 diesel migration run

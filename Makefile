@@ -4,7 +4,7 @@
 	echo "DATABASE_URL=postgres://postgres:prueba123@127.0.0.1:9432/postgres" > .env
 
 ./www/static:
-	mkdir -p www/static
+	mkdir -p www/static/uploads
 
 ./data:
 	mkdir data

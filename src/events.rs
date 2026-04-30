@@ -7,7 +7,8 @@ use rocket::response::status::NotFound;
 use rocket::response::{status::Created, Debug};
 use rocket::serde::json::Json;
 use rocket::serde::uuid::Uuid;
-use rocket::{delete, get, post};
+use rocket::{delete, get, post, put};
+use rocket::fs::TempFile;
 use rocket_dyn_templates::{context, Template};
 use rocket_sync_db_pools::diesel;
 
@@ -30,6 +31,60 @@ pub async fn add(arg_event: Json<Event>, _user: Claims, tdb: EventDB) -> Result<
 
     Ok(Created::new("/").body(Json(ret_id)))
 }
+
+/// Modifies an event
+#[put("/<eventid>", format = "json", data = "<arg_event>")]
+pub async fn modify(
+    eventid: Uuid,
+    arg_event: Json<Event>,
+    _user: Claims,
+    tdb: EventDB,
+) -> Result<Json<Event>, NotFound<String>> {
+    let mut updated_event = arg_event.into_inner();
+    updated_event.id = eventid;
+
+    let result = tdb
+        .run(move |conn| {
+            diesel::update(crate::schema::events::dsl::events.filter(crate::schema::events::dsl::id.eq(eventid)))
+                .set(&updated_event)
+                .get_result::<Event>(conn)
+        })
+        .await;
+
+    match result {
+        Ok(event) => Ok(Json(event)),
+        Err(_) => Err(NotFound(format!("Could not find event: {}", eventid))),
+    }
+}
+
+/// Uploads an image for an event
+#[post("/<eventid>/image", data = "<file>")]
+pub async fn upload_image(
+    eventid: Uuid,
+    mut file: TempFile<'_>,
+    _user: Claims,
+    tdb: EventDB,
+) -> std::result::Result<Json<String>, Debug<std::io::Error>> {
+    let filename = format!("{}_{}", eventid, file.name().unwrap_or("image.png"));
+    let path = std::path::Path::new(crate::STATIC_FILES_DIR).join("uploads").join(&filename);
+
+    std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+
+    file.copy_to(&path).await.map_err(Debug)?;
+
+    let db_path = format!("/public/uploads/{}", filename);
+    let db_path_clone = db_path.clone();
+
+    tdb.run(move |conn| {
+        diesel::update(crate::schema::events::dsl::events.filter(crate::schema::events::dsl::id.eq(eventid)))
+            .set(crate::schema::events::dsl::image.eq(db_path_clone))
+            .execute(conn)
+            .expect("Error updating event image");
+    }).await;
+
+    Ok(Json(format!("Image uploaded: {}", db_path)))
+}
+
 
 //https://api.rocket.rs/v0.5/rocket_sync_db_pools/
 
