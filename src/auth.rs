@@ -18,7 +18,8 @@ pub struct LoginRequest {
 /// Successful response
 #[derive(Serialize)]
 pub struct LoginResponse {
-    message: String,
+    pub message: String,
+    pub token: String,
 }
 
 /// Serve the login page
@@ -27,7 +28,7 @@ pub fn login_page() -> Template {
     Template::render("login", context! {})
 }
 
-/// User authentication, Successful authentication returns a JWT in an HttpOnly cookie
+/// User authentication, Successful authentication returns a JWT in an HttpOnly cookie and JSON body
 #[post("/login", data = "<req>")]
 pub fn login(req: Json<LoginRequest>, cookies: &CookieJar<'_>) -> Result<Json<LoginResponse>, Custom<String>> {
     //TODO: use the database
@@ -39,7 +40,7 @@ pub fn login(req: Json<LoginRequest>, cookies: &CookieJar<'_>) -> Result<Json<Lo
     let token = claim.into_token()?;
 
     cookies.add(
-        Cookie::build(("jwt", token))
+        Cookie::build(("jwt", token.clone()))
             .http_only(true)
             .secure(false) // Set to true in production with HTTPS
             .same_site(rocket::http::SameSite::Lax)
@@ -48,6 +49,7 @@ pub fn login(req: Json<LoginRequest>, cookies: &CookieJar<'_>) -> Result<Json<Lo
     );
 
     Ok(Json(LoginResponse {
-        message: "Login successful".to_string()
+        message: "Login successful".to_string(),
+        token,
     }))
 }
