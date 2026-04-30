@@ -90,7 +90,7 @@ pub async fn upload_image(
 
 /// Show the list of events in HTML
 #[get("/")]
-pub async fn list(tdb: EventDB) -> Template {
+pub async fn list(user: Option<Claims>, tdb: EventDB) -> Template {
     let results = tdb
         .run(move |connection| {
             crate::schema::events::dsl::events
@@ -98,7 +98,11 @@ pub async fn list(tdb: EventDB) -> Template {
                 .expect("Error loading events")
         })
         .await;
-    Template::render("events", context! {events: &results, count: results.len()})
+    Template::render("events", context! {
+        events: &results, 
+        count: results.len(),
+        is_logged_in: user.is_some()
+    })
 }
 
 /// Get a event and returns it as a JSON object
