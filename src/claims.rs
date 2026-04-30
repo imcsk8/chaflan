@@ -44,8 +44,16 @@ pub struct Claims {
 impl<'r> FromRequest<'r> for Claims {
     type Error = AuthenticationError;
     async fn from_request(request: &'r rocket::Request<'_>) -> Outcome<Self, Self::Error> {
-        match request.headers().get_one(AUTHORIZATION) {
-            Some(v) => match Claims::from_authorization(v) {
+        let token_str = if let Some(cookie) = request.cookies().get("jwt") {
+            Some(cookie.value().to_string())
+        } else if let Some(header) = request.headers().get_one(AUTHORIZATION) {
+            header.strip_prefix(BEARER).map(str::trim).map(String::from)
+        } else {
+            None
+        };
+
+        match token_str {
+            Some(t) => match Claims::from_authorization(&t) {
                 Ok(c) => Outcome::Success(c),
                 Err(e) => Outcome::Error((Status::Forbidden, e)),
             },
@@ -64,13 +72,8 @@ impl Claims {
         }
     }
 
-    /// Create Claims from a 'Bearer <Token>' value
-    fn from_authorization(value: &str) -> Result<Self, AuthenticationError> {
-        let token = match value.strip_prefix(BEARER).map(str::trim) {
-            Some(t) => t,
-            None => return Err(AuthenticationError::Missing),
-        };
-
+    /// Create Claims from a token string
+    fn from_authorization(token: &str) -> Result<Self, AuthenticationError> {
         // Get claims from a JWT
         let token = decode::<Claims>(
             token,

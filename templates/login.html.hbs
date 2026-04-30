@@ -48,8 +48,6 @@
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    localStorage.setItem('token', data.token);
                     messageDiv.style.color = 'green';
                     messageDiv.textContent = 'Login successful! Redirecting...';
                     setTimeout(() => window.location.href = '/events', 1000);
