@@ -1,21 +1,15 @@
 /**
- * Chaflan Event Manager - Client-side logic
+ * Chaflan Event Manager - Client-side logic using jQuery
  * 
  * This file contains functions for handling user authentication and event management.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+$(document).ready(() => {
     // Initialize Login Form
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
+    $('#loginForm').on('submit', handleLogin);
 
     // Initialize Add Event Form
-    const addEventForm = document.getElementById('addEventForm');
-    if (addEventForm) {
-        addEventForm.addEventListener('submit', handleAddEvent);
-    }
+    $('#addEventForm').on('submit', handleAddEvent);
 });
 
 /**
@@ -25,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function handleLogin(e) {
     e.preventDefault();
-    const user = document.getElementById('user').value;
-    const password = document.getElementById('password').value;
-    const messageDiv = document.getElementById('message');
+    const user = $('#user').val();
+    const password = $('#password').val();
+    const $messageDiv = $('#message');
 
     try {
         const response = await fetch('/login', {
@@ -37,19 +31,15 @@ async function handleLogin(e) {
         });
 
         if (response.ok) {
-            // Note: Token is returned in JSON but also set as an HttpOnly cookie (BFF)
-            messageDiv.style.color = 'green';
-            messageDiv.textContent = 'Login successful! Redirecting...';
+            $messageDiv.css('color', 'green').text('Login successful! Redirecting...');
             setTimeout(() => window.location.href = '/events', 1000);
         } else {
             const error = await response.text();
-            messageDiv.style.color = 'red';
-            messageDiv.textContent = 'Login failed: ' + error;
+            $messageDiv.css('color', 'red').text('Login failed: ' + error);
         }
     } catch (err) {
         console.error('Login error:', err);
-        messageDiv.style.color = 'red';
-        messageDiv.textContent = 'An error occurred. Please try again.';
+        $messageDiv.css('color', 'red').text('An error occurred. Please try again.');
     }
 }
 
@@ -60,21 +50,21 @@ async function handleLogin(e) {
  */
 async function handleAddEvent(e) {
     e.preventDefault();
-    const messageDiv = document.getElementById('message');
+    const $messageDiv = $('#message');
     
     // Format dates to ISO string that Diesel expects (YYYY-MM-DDTHH:MM:SS)
     const formatDate = (val) => val ? val + ":00" : null;
 
     const payload = {
-        id: "00000000-0000-0000-0000-000000000000", // Server generates real UUID
-        name: document.getElementById('name').value,
-        venue: document.getElementById('venue').value,
-        address: document.getElementById('address').value || null,
-        url: document.getElementById('url').value,
-        starts_at: formatDate(document.getElementById('starts_at').value),
-        ends_at: formatDate(document.getElementById('ends_at').value),
-        contactname: document.getElementById('contactname').value || null,
-        comments: document.getElementById('comments').value || null,
+        id: "00000000-0000-0000-0000-000000000000",
+        name: $('#name').val(),
+        venue: $('#venue').val(),
+        address: $('#address').val() || null,
+        url: $('#url').val(),
+        starts_at: formatDate($('#starts_at').val()),
+        ends_at: formatDate($('#ends_at').val()),
+        contactname: $('#contactname').val() || null,
+        comments: $('#comments').val() || null,
         image: null
     };
 
@@ -86,17 +76,14 @@ async function handleAddEvent(e) {
         });
 
         if (response.ok) {
-            messageDiv.style.color = 'green';
-            messageDiv.textContent = 'Event created successfully! Redirecting...';
+            $messageDiv.css('color', 'green').text('Event created successfully! Redirecting...');
             setTimeout(() => window.location.href = '/events', 1500);
         } else {
             const error = await response.text();
-            messageDiv.style.color = 'red';
-            messageDiv.textContent = 'Failed to create event: ' + error;
+            $messageDiv.css('color', 'red').text('Failed to create event: ' + error);
         }
     } catch (err) {
         console.error('Add event error:', err);
-        messageDiv.style.color = 'red';
-        messageDiv.textContent = 'An error occurred. Please try again.';
+        $messageDiv.css('color', 'red').text('An error occurred. Please try again.');
     }
 }
