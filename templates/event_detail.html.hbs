@@ -41,6 +41,7 @@
             <a href="{{ event.url }}" target="_blank" class="btn btn-primary">Visit Event Website</a>
             {{/if}}
             {{#if is_logged_in}}
+            <a href="/events/{{ event.id }}/update_page" class="btn btn-success">Edit Event</a>
             <button class="btn btn-danger" onclick="handleDeleteEvent('{{ event.id }}', true)">Delete Event</button>
             {{/if}}
         </div>
