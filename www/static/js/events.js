@@ -107,3 +107,34 @@ async function handleAddEvent(e) {
         $messageDiv.css('color', 'red').text('An error occurred. Please try again.');
     }
 }
+
+/**
+ * Handles event deletion.
+ * @param {string} eventId - The UUID of the event to delete.
+ * @param {boolean} redirect - Whether to redirect to the list page on success.
+ */
+async function handleDeleteEvent(eventId, redirect = false) {
+    if (!confirm('Are you sure you want to delete this event?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`/events/${eventId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            if (redirect) {
+                window.location.href = '/events';
+            } else {
+                location.reload();
+            }
+        } else {
+            const error = await response.text();
+            alert('Failed to delete event: ' + error);
+        }
+    } catch (err) {
+        console.error('Delete error:', err);
+        alert('An error occurred while deleting the event.');
+    }
+}
