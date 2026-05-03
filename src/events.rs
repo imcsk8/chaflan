@@ -171,3 +171,22 @@ pub async fn delete(
 pub async fn add_page(_user: Claims) -> Template {
     Template::render("add_event", context! {})
 }
+
+/// Serve the page to update an existing event
+#[get("/<eventid>/update_page")]
+pub async fn update_page(eventid: Uuid, _user: Claims, tdb: EventDB) -> std::result::Result<Template, Custom<String>> {
+    let results = tdb
+        .run(move |connection| {
+            crate::schema::events::dsl::events
+                .filter(id.eq(eventid))
+                .load::<Event>(connection)
+        })
+        .await
+        .map_err(|e| Custom(Status::InternalServerError, e.to_string()))?;
+
+    if let Some(event) = results.into_iter().next() {
+        Ok(Template::render("update_event", context! { event }))
+    } else {
+        Err(Custom(Status::NotFound, format!("Could not find event: {}", eventid)))
+    }
+}

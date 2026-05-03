@@ -10,7 +10,74 @@ $(document).ready(() => {
 
     // Initialize Add Event Form
     $('#addEventForm').on('submit', handleAddEvent);
+
+    // Initialize Update Event Form
+    $('#updateEventForm').on('submit', handleUpdateEvent);
 });
+
+/**
+ * Handles existing event update via JSON PUT.
+ * On success, uploads a new image if provided.
+ * @param {Event} e - The form submit event
+ */
+async function handleUpdateEvent(e) {
+    e.preventDefault();
+    const eventId = $('#event_id').val();
+    const $messageDiv = $('#message');
+    
+    // Format dates to ISO string that Diesel expects (YYYY-MM-DDTHH:MM:SS)
+    const formatDate = (val) => val ? val + (val.length === 16 ? ":00" : "") : null;
+
+    const payload = {
+        id: eventId,
+        name: $('#name').val(),
+        venue: $('#venue').val(),
+        address: $('#address').val() || null,
+        url: $('#url').val(),
+        starts_at: formatDate($('#starts_at').val()),
+        ends_at: formatDate($('#ends_at').val()),
+        contactname: $('#contactname').val() || null,
+        comments: $('#comments').val() || null,
+        image: null // Will be updated by separate call if file provided
+    };
+
+    try {
+        const response = await fetch(`/events/${eventId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            const imageFile = $('#image')[0].files[0];
+
+            if (imageFile) {
+                $messageDiv.css('color', 'blue').text('Event updated. Uploading new image...');
+                try {
+                    const imgResponse = await fetch(`/events/${eventId}/image`, {
+                        method: 'POST',
+                        body: imageFile
+                    });
+                    if (!imgResponse.ok) {
+                        const imgErr = await imgResponse.text();
+                        console.error('Image upload failed:', imgErr);
+                    }
+                } catch (imgErr) {
+                    console.error('Error during image upload:', imgErr);
+                }
+            }
+
+            $messageDiv.css('color', 'green').text('Event updated successfully! Redirecting...');
+            setTimeout(() => window.location.href = `/events/${eventId}?format=text/html`, 1000);
+        } else {
+            const error = await response.text();
+            $messageDiv.css('color', 'red').text('Failed to update event: ' + error);
+        }
+    } catch (err) {
+        console.error('Update event error:', err);
+        $messageDiv.css('color', 'red').text('An error occurred. Please try again.');
+    }
+}
 
 /**
  * Handles user login via JSON POST.
