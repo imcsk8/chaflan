@@ -76,6 +76,26 @@ async function handleAddEvent(e) {
         });
 
         if (response.ok) {
+            const eventId = await response.json();
+            const imageFile = $('#image')[0].files[0];
+
+            // If an image was selected, upload it now
+            if (imageFile) {
+                $messageDiv.css('color', 'blue').text('Event created. Uploading image...');
+                try {
+                    const imgResponse = await fetch(`/events/${eventId}/image`, {
+                        method: 'POST',
+                        body: imageFile
+                    });
+                    if (!imgResponse.ok) {
+                        const imgErr = await imgResponse.text();
+                        console.error('Image upload failed:', imgErr);
+                    }
+                } catch (imgErr) {
+                    console.error('Error during image upload:', imgErr);
+                }
+            }
+
             $messageDiv.css('color', 'green').text('Event created successfully! Redirecting...');
             setTimeout(() => window.location.href = '/events', 1500);
         } else {

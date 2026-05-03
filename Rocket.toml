@@ -5,3 +5,9 @@ address = "0.0.0.0"
 url = "postgres://postgres:prueba123@127.0.0.1:9432/postgres"
 timeout = 5
 pool_size = 2
+
+[global.limits]
+forms = "10MiB"
+file = "10MiB"
+data-form = "10MiB"
+

@@ -18,9 +18,17 @@
             {{/if}}
         </header>
         <p>Events:</p>
-        <ul>
+        <ul class="event-list">
             {{#each events}}
-            <li><a href="/events/{{ this.id }}?format=text/html">{{ this.name }}</a>&nbsp;{{this.starts_at}} {{this.ends_at}}</li>
+            <li class="event-item">
+                {{#if this.image}}
+                    <img src="{{ this.image }}" alt="{{ this.name }}" class="thumbnail">
+                {{/if}}
+                <div class="event-info">
+                    <a href="/events/{{ this.id }}?format=text/html" class="event-link">{{ this.name }}</a>
+                    <span class="event-dates">{{this.starts_at}} - {{this.ends_at}}</span>
+                </div>
+            </li>
             {{else}}
             <p> No events yet</p>
             {{/each}}
