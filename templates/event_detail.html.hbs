@@ -40,6 +40,9 @@
             {{#if event.url}}
             <a href="{{ event.url }}" target="_blank" class="btn btn-primary">Visit Event Website</a>
             {{/if}}
+            {{#if is_logged_in}}
+            <button class="btn btn-danger" onclick="handleDeleteEvent('{{ event.id }}', true)">Delete Event</button>
+            {{/if}}
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

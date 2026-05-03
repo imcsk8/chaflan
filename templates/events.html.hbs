@@ -28,6 +28,11 @@
                     <a href="/events/{{ this.id }}?format=text/html" class="event-link">{{ this.name }}</a>
                     <span class="event-dates">{{this.starts_at}} - {{this.ends_at}}</span>
                 </div>
+                {{#if ../is_logged_in}}
+                    <div class="event-actions">
+                        <button class="btn-danger btn-sm" onclick="handleDeleteEvent('{{ this.id }}')">Delete</button>
+                    </div>
+                {{/if}}
             </li>
             {{else}}
             <p> No events yet</p>

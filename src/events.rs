@@ -126,7 +126,7 @@ pub async fn get_json(eventid: Uuid, tdb: EventDB) -> Result<Json<Vec<Event>>, N
 
 /// Get an event and returns it as an HTML page
 #[get("/<eventid>", format="text/html", rank=2)]
-pub async fn get_html(eventid: Uuid, tdb: EventDB) -> std::result::Result<Template, Custom<String>> {
+pub async fn get_html(eventid: Uuid, user: Option<Claims>, tdb: EventDB) -> std::result::Result<Template, Custom<String>> {
     let results = tdb
         .run(move |connection| {
             crate::schema::events::dsl::events
@@ -137,7 +137,10 @@ pub async fn get_html(eventid: Uuid, tdb: EventDB) -> std::result::Result<Templa
         .map_err(|e| Custom(Status::InternalServerError, e.to_string()))?;
 
     if let Some(event) = results.into_iter().next() {
-        Ok(Template::render("event_detail", context! { event }))
+        Ok(Template::render("event_detail", context! { 
+            event,
+            is_logged_in: user.is_some()
+        }))
     } else {
         Err(Custom(Status::NotFound, format!("Could not find event: {}", eventid)))
     }

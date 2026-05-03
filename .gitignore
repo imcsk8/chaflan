@@ -27,3 +27,4 @@ Cargo.lock
 #chaflan
 data
 .env
+www/static/uploads/
